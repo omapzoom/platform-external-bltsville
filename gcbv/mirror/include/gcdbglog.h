@@ -80,26 +80,26 @@ struct gcmmucontext;
 #endif
 
 #if !GCDEBUG_ENABLE
-#define GCDBG_REPORT_MISSING() \
-	printf("gcx logging is not integrated.\n")
+#define GCDBG_REPORT_MISSING(file, line) \
+	printf("(%s:%d)gcx logging is not integrated.\n", file, line)
 
 #define GCDBG_SHOWENABLED(s) \
-	GCDBG_REPORT_MISSING()
+	GCDBG_REPORT_MISSING(__FILE__, __LINE__)
 
 #define GCDBG_ENABLEDUMP() \
-	GCDBG_REPORT_MISSING()
+	GCDBG_REPORT_MISSING(__FILE__, __LINE__)
 
 #define GCDBG_DISABLEDUMP() \
-	GCDBG_REPORT_MISSING()
+	GCDBG_REPORT_MISSING(__FILE__, __LINE__)
 
 #define GCDBG_SETFILTER(filtername, zone) \
-	GCDBG_REPORT_MISSING()
+	GCDBG_REPORT_MISSING(__FILE__, __LINE__)
 
 #define GCDBG_FLUSHDUMP(s) \
-	GCDBG_REPORT_MISSING()
+	GCDBG_REPORT_MISSING(__FILE__, __LINE__)
 
 #define GCDBG_RESETDUMP() \
-	GCDBG_REPORT_MISSING()
+	GCDBG_REPORT_MISSING(__FILE__, __LINE__)
 
 #endif
 
@@ -179,9 +179,10 @@ do { \
 		return &GCDBGFILTER; \
 	}
 
-#define GCDBG_REGISTER(name) \
+#define GCDBG_REGISTER(name, initalzone) \
 do { \
 	struct gcdbgfilter *name ## _dbgfilter(void); \
+	name ## _dbgfilter()->zone = initalzone; \
 	gc_dbg_add_client(name ## _dbgfilter()); \
 } while (0)
 
@@ -233,6 +234,8 @@ do { \
 #define GCDUMPBUFFER(zone, ptr, gpuaddr, datasize) \
 	gc_dump_cmd_buffer(&GCDBGFILTER, zone, ptr, gpuaddr, datasize)
 
+#define GCDUMPMMU(zone, gcmmucontext) \
+	gc_dump_mmu(&GCDBGFILTER, zone, gcmmucontext)
 #endif
 
 

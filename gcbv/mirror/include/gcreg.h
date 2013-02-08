@@ -1,33 +1,15 @@
 /*
- * Copyright(c) 2012,
- * Texas Instruments, Inc. and Vivante Corporation.
+ * gcreg.h
  *
- * All rights reserved.
+ * Copyright (C) 2010-2011 Vivante Corporation.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+ * This package is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
  *
- *   * Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *   * Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in
- *     the documentation and/or other materials provided with the
- *     distribution.
- *   * Neither the name of Vivante Corporation nor the names of its
- *     contributors may be used to endorse or promote products derived
- *     from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
+ * THIS PACKAGE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+ * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  */
 
 #ifndef __gcreg_h
@@ -6198,7 +6180,7 @@ struct gcregcolormultiplymodes {
 	unsigned int _reserved_5_7:3;
 
 	/* gcregColorMultiplyModesRegAddrs:
-		GCREG_COLOR_MULTIPLY_MODES_DST_PREMULTIPLY */
+		GCREG_COLOR_MULTIPLY_MODES_SRC_GLOBAL_PREMULTIPLY */
 	unsigned int srcglobalpremul:2;
 
 	/* gcregColorMultiplyModesRegAddrs:
@@ -8464,7 +8446,7 @@ struct gcregmultisource {
 
 /* 32-bit aligned base address of the source U plane. */
 
-#define gcregBlock8AddressURegAddrs                                       0x4AD0
+#define gcregBlock8UPlaneAddressRegAddrs                                  0x4AD0
 #define GCREG_BLOCK8_UPLANE_ADDRESS_MSB                                       15
 #define GCREG_BLOCK8_UPLANE_ADDRESS_LSB                                        3
 #define GCREG_BLOCK8_UPLANE_ADDRESS_BLK                                        0
@@ -8485,7 +8467,7 @@ struct gcregmultisource {
 
 /* Stride of the source U plane in bytes. */
 
-#define gcregBlock8StrideURegAddrs                                        0x4AD8
+#define gcregBlock8UPlaneStrideRegAddrs                                   0x4AD8
 #define GCREG_BLOCK8_UPLANE_STRIDE_MSB                                        15
 #define GCREG_BLOCK8_UPLANE_STRIDE_LSB                                         3
 #define GCREG_BLOCK8_UPLANE_STRIDE_BLK                                         0
@@ -8506,7 +8488,7 @@ struct gcregmultisource {
 
 /* 32-bit aligned base address of the source V plane. */
 
-#define gcregBlock8AddressVRegAddrs                                       0x4AE0
+#define gcregBlock8VPlaneAddressRegAddrs                                  0x4AE0
 #define GCREG_BLOCK8_VPLANE_ADDRESS_MSB                                       15
 #define GCREG_BLOCK8_VPLANE_ADDRESS_LSB                                        3
 #define GCREG_BLOCK8_VPLANE_ADDRESS_BLK                                        0
@@ -8527,7 +8509,7 @@ struct gcregmultisource {
 
 /* Stride of the source V plane in bytes. */
 
-#define gcregBlock8StrideVRegAddrs                                        0x4AE8
+#define gcregBlock8VPlaneStrideRegAddrs                                   0x4AE8
 #define GCREG_BLOCK8_VPLANE_STRIDE_MSB                                        15
 #define GCREG_BLOCK8_VPLANE_STRIDE_LSB                                         3
 #define GCREG_BLOCK8_VPLANE_STRIDE_BLK                                         0
@@ -9081,6 +9063,10 @@ struct gcregmultisource {
 #define GCREG_BLENDING_MODE_SATURATED_ALPHA                                  0x6
 #define GCREG_BLENDING_MODE_SATURATED_DEST_ALPHA                             0x7
 
+#define GCREG_SRC_GLOBAL_PREMULTIPLY_DISABLE                                 0x0
+#define GCREG_SRC_GLOBAL_PREMULTIPLY_ALPHA                                   0x1
+#define GCREG_SRC_GLOBAL_PREMULTIPLY_COLOR                                   0x2
+
 /* ~~~~~~~~~~~~~ */
 
 #define GCREG_FACTOR_INVERSE_DISABLE                                         0x0
@@ -9318,11 +9304,15 @@ struct gcmodst {
 ** Modular operations: alphaoff
 */
 
-static const struct gccmdldstate gcmoalphaoff_control_ldst[4] = {
+static const struct gccmdldstate gcmoalphaoff_control_ldst[8] = {
 	GCLDSTATE(gcregAlphaControlRegAddrs, 1),
 	GCLDSTATE(gcregBlock4AlphaControlRegAddrs + 1, 1),
 	GCLDSTATE(gcregBlock4AlphaControlRegAddrs + 2, 1),
 	GCLDSTATE(gcregBlock4AlphaControlRegAddrs + 3, 1),
+	GCLDSTATE(gcregBlock8AlphaControlRegAddrs + 4, 1),
+	GCLDSTATE(gcregBlock8AlphaControlRegAddrs + 5, 1),
+	GCLDSTATE(gcregBlock8AlphaControlRegAddrs + 6, 1),
+	GCLDSTATE(gcregBlock8AlphaControlRegAddrs + 7, 1)
 };
 
 struct gcmoalphaoff {
@@ -9363,18 +9353,26 @@ struct gcmoalpha {
 		unsigned int _filler;
 };
 
-static const struct gccmdldstate gcmoxsrcalpha_control_ldst[4] = {
+static const struct gccmdldstate gcmoxsrcalpha_control_ldst[8] = {
 	GCLDSTATE(gcregAlphaControlRegAddrs, 1),
 	GCLDSTATE(gcregBlock4AlphaControlRegAddrs + 1, 1),
 	GCLDSTATE(gcregBlock4AlphaControlRegAddrs + 2, 1),
 	GCLDSTATE(gcregBlock4AlphaControlRegAddrs + 3, 1),
+	GCLDSTATE(gcregBlock8AlphaControlRegAddrs + 4, 1),
+	GCLDSTATE(gcregBlock8AlphaControlRegAddrs + 5, 1),
+	GCLDSTATE(gcregBlock8AlphaControlRegAddrs + 6, 1),
+	GCLDSTATE(gcregBlock8AlphaControlRegAddrs + 7, 1)
 };
 
-static const struct gccmdldstate gcmoxsrcalpha_mode_ldst[4] = {
+static const struct gccmdldstate gcmoxsrcalpha_mode_ldst[8] = {
 	GCLDSTATE(gcregAlphaModesRegAddrs, 1),
 	GCLDSTATE(gcregBlock4AlphaModesRegAddrs + 1, 1),
 	GCLDSTATE(gcregBlock4AlphaModesRegAddrs + 2, 1),
 	GCLDSTATE(gcregBlock4AlphaModesRegAddrs + 3, 1),
+	GCLDSTATE(gcregBlock8AlphaModesRegAddrs + 4, 1),
+	GCLDSTATE(gcregBlock8AlphaModesRegAddrs + 5, 1),
+	GCLDSTATE(gcregBlock8AlphaModesRegAddrs + 6, 1),
+	GCLDSTATE(gcregBlock8AlphaModesRegAddrs + 7, 1)
 };
 
 struct gcmoxsrcalpha {
@@ -9424,18 +9422,26 @@ struct gcmoglobal {
 		unsigned int _filler;
 };
 
-static const struct gccmdldstate gcmoxsrcglobal_srcglobal_ldst[4] = {
+static const struct gccmdldstate gcmoxsrcglobal_srcglobal_ldst[8] = {
 	GCLDSTATE(gcregGlobalSrcColorRegAddrs, 1),
 	GCLDSTATE(gcregBlock4GlobalSrcColorRegAddrs + 1, 1),
 	GCLDSTATE(gcregBlock4GlobalSrcColorRegAddrs + 2, 1),
 	GCLDSTATE(gcregBlock4GlobalSrcColorRegAddrs + 3, 1),
+	GCLDSTATE(gcregBlock8GlobalSrcColorRegAddrs + 4, 1),
+	GCLDSTATE(gcregBlock8GlobalSrcColorRegAddrs + 5, 1),
+	GCLDSTATE(gcregBlock8GlobalSrcColorRegAddrs + 6, 1),
+	GCLDSTATE(gcregBlock8GlobalSrcColorRegAddrs + 7, 1)
 };
 
-static const struct gccmdldstate gcmoxsrcglobal_dstglobal_ldst[4] = {
+static const struct gccmdldstate gcmoxsrcglobal_dstglobal_ldst[8] = {
 	GCLDSTATE(gcregGlobalDestColorRegAddrs, 1),
 	GCLDSTATE(gcregBlock4GlobalDestColorRegAddrs + 1, 1),
 	GCLDSTATE(gcregBlock4GlobalDestColorRegAddrs + 2, 1),
 	GCLDSTATE(gcregBlock4GlobalDestColorRegAddrs + 3, 1),
+	GCLDSTATE(gcregBlock8GlobalDestColorRegAddrs + 4, 1),
+	GCLDSTATE(gcregBlock8GlobalDestColorRegAddrs + 5, 1),
+	GCLDSTATE(gcregBlock8GlobalDestColorRegAddrs + 6, 1),
+	GCLDSTATE(gcregBlock8GlobalDestColorRegAddrs + 7, 1)
 };
 
 struct gcmoxsrcglobal {
@@ -9538,39 +9544,59 @@ struct gcmoyuv3 {
 ** Modular operations: xsrcyuv
 */
 
-static const struct gccmdldstate gcmoxsrcyuv_uplaneaddress_ldst[4] = {
+static const struct gccmdldstate gcmoxsrcyuv_uplaneaddress_ldst[8] = {
 	GCLDSTATE(gcregUPlaneAddressRegAddrs, 1),
 	GCLDSTATE(gcregBlock4UPlaneAddressRegAddrs + 1, 1),
 	GCLDSTATE(gcregBlock4UPlaneAddressRegAddrs + 2, 1),
 	GCLDSTATE(gcregBlock4UPlaneAddressRegAddrs + 3, 1),
+	GCLDSTATE(gcregBlock8UPlaneAddressRegAddrs + 4, 1),
+	GCLDSTATE(gcregBlock8UPlaneAddressRegAddrs + 5, 1),
+	GCLDSTATE(gcregBlock8UPlaneAddressRegAddrs + 6, 1),
+	GCLDSTATE(gcregBlock8UPlaneAddressRegAddrs + 7, 1)
 };
 
-static const struct gccmdldstate gcmoxsrcyuv_uplanestride_ldst[4] = {
+static const struct gccmdldstate gcmoxsrcyuv_uplanestride_ldst[8] = {
 	GCLDSTATE(gcregUPlaneStrideRegAddrs, 1),
 	GCLDSTATE(gcregBlock4UPlaneStrideRegAddrs + 1, 1),
 	GCLDSTATE(gcregBlock4UPlaneStrideRegAddrs + 2, 1),
 	GCLDSTATE(gcregBlock4UPlaneStrideRegAddrs + 3, 1),
+	GCLDSTATE(gcregBlock8UPlaneStrideRegAddrs + 4, 1),
+	GCLDSTATE(gcregBlock8UPlaneStrideRegAddrs + 5, 1),
+	GCLDSTATE(gcregBlock8UPlaneStrideRegAddrs + 6, 1),
+	GCLDSTATE(gcregBlock8UPlaneStrideRegAddrs + 7, 1)
 };
 
-static const struct gccmdldstate gcmoxsrcyuv_vplaneaddress_ldst[4] = {
+static const struct gccmdldstate gcmoxsrcyuv_vplaneaddress_ldst[8] = {
 	GCLDSTATE(gcregVPlaneAddressRegAddrs, 1),
 	GCLDSTATE(gcregBlock4VPlaneAddressRegAddrs + 1, 1),
 	GCLDSTATE(gcregBlock4VPlaneAddressRegAddrs + 2, 1),
 	GCLDSTATE(gcregBlock4VPlaneAddressRegAddrs + 3, 1),
+	GCLDSTATE(gcregBlock8VPlaneAddressRegAddrs + 4, 1),
+	GCLDSTATE(gcregBlock8VPlaneAddressRegAddrs + 5, 1),
+	GCLDSTATE(gcregBlock8VPlaneAddressRegAddrs + 6, 1),
+	GCLDSTATE(gcregBlock8VPlaneAddressRegAddrs + 7, 1)
 };
 
-static const struct gccmdldstate gcmoxsrcyuv_vplanestride_ldst[4] = {
+static const struct gccmdldstate gcmoxsrcyuv_vplanestride_ldst[8] = {
 	GCLDSTATE(gcregVPlaneStrideRegAddrs, 1),
 	GCLDSTATE(gcregBlock4VPlaneStrideRegAddrs + 1, 1),
 	GCLDSTATE(gcregBlock4VPlaneStrideRegAddrs + 2, 1),
 	GCLDSTATE(gcregBlock4VPlaneStrideRegAddrs + 3, 1),
+	GCLDSTATE(gcregBlock8VPlaneStrideRegAddrs + 4, 1),
+	GCLDSTATE(gcregBlock8VPlaneStrideRegAddrs + 5, 1),
+	GCLDSTATE(gcregBlock8VPlaneStrideRegAddrs + 6, 1),
+	GCLDSTATE(gcregBlock8VPlaneStrideRegAddrs + 7, 1)
 };
 
-static const struct gccmdldstate gcmoxsrcyuv_pectrl_ldst[4] = {
+static const struct gccmdldstate gcmoxsrcyuv_pectrl_ldst[8] = {
 	GCLDSTATE(gcregPEControlRegAddrs, 1),
 	GCLDSTATE(gcregBlock4PEControlRegAddrs + 1, 1),
 	GCLDSTATE(gcregBlock4PEControlRegAddrs + 2, 1),
 	GCLDSTATE(gcregBlock4PEControlRegAddrs + 3, 1),
+	GCLDSTATE(gcregBlock8PEControlRegAddrs + 4, 1),
+	GCLDSTATE(gcregBlock8PEControlRegAddrs + 5, 1),
+	GCLDSTATE(gcregBlock8PEControlRegAddrs + 6, 1),
+	GCLDSTATE(gcregBlock8PEControlRegAddrs + 7, 1)
 };
 
 struct gcmoxsrcyuv1 {
@@ -9732,74 +9758,114 @@ struct gcmosrc0 {
 		} mult;
 };
 
-static const struct gccmdldstate gcmosrc_address_ldst[4] = {
+static const struct gccmdldstate gcmosrc_address_ldst[8] = {
 	GCLDSTATE(gcregSrcAddressRegAddrs, 1),
 	GCLDSTATE(gcregBlock4SrcAddressRegAddrs + 1, 1),
 	GCLDSTATE(gcregBlock4SrcAddressRegAddrs + 2, 1),
 	GCLDSTATE(gcregBlock4SrcAddressRegAddrs + 3, 1),
+	GCLDSTATE(gcregBlock8SrcAddressRegAddrs + 4, 1),
+	GCLDSTATE(gcregBlock8SrcAddressRegAddrs + 5, 1),
+	GCLDSTATE(gcregBlock8SrcAddressRegAddrs + 6, 1),
+	GCLDSTATE(gcregBlock8SrcAddressRegAddrs + 7, 1)
 };
 
-static const struct gccmdldstate gcmosrc_stride_ldst[4] = {
+static const struct gccmdldstate gcmosrc_stride_ldst[8] = {
 	GCLDSTATE(gcregSrcStrideRegAddrs, 1),
 	GCLDSTATE(gcregBlock4SrcStrideRegAddrs + 1, 1),
 	GCLDSTATE(gcregBlock4SrcStrideRegAddrs + 2, 1),
 	GCLDSTATE(gcregBlock4SrcStrideRegAddrs + 3, 1),
+	GCLDSTATE(gcregBlock8SrcStrideRegAddrs + 4, 1),
+	GCLDSTATE(gcregBlock8SrcStrideRegAddrs + 5, 1),
+	GCLDSTATE(gcregBlock8SrcStrideRegAddrs + 6, 1),
+	GCLDSTATE(gcregBlock8SrcStrideRegAddrs + 7, 1)
 };
 
-static const struct gccmdldstate gcmosrc_rotation_ldst[4] = {
+static const struct gccmdldstate gcmosrc_rotation_ldst[8] = {
 	GCLDSTATE(gcregSrcRotationConfigRegAddrs, 1),
 	GCLDSTATE(gcregBlock4SrcRotationConfigRegAddrs + 1, 1),
 	GCLDSTATE(gcregBlock4SrcRotationConfigRegAddrs + 2, 1),
 	GCLDSTATE(gcregBlock4SrcRotationConfigRegAddrs + 3, 1),
+	GCLDSTATE(gcregBlock8SrcRotationConfigRegAddrs + 4, 1),
+	GCLDSTATE(gcregBlock8SrcRotationConfigRegAddrs + 5, 1),
+	GCLDSTATE(gcregBlock8SrcRotationConfigRegAddrs + 6, 1),
+	GCLDSTATE(gcregBlock8SrcRotationConfigRegAddrs + 7, 1)
 };
 
-static const struct gccmdldstate gcmosrc_config_ldst[4] = {
+static const struct gccmdldstate gcmosrc_config_ldst[8] = {
 	GCLDSTATE(gcregSrcConfigRegAddrs, 1),
 	GCLDSTATE(gcregBlock4SrcConfigRegAddrs + 1, 1),
 	GCLDSTATE(gcregBlock4SrcConfigRegAddrs + 2, 1),
 	GCLDSTATE(gcregBlock4SrcConfigRegAddrs + 3, 1),
+	GCLDSTATE(gcregBlock8SrcConfigRegAddrs + 4, 1),
+	GCLDSTATE(gcregBlock8SrcConfigRegAddrs + 5, 1),
+	GCLDSTATE(gcregBlock8SrcConfigRegAddrs + 6, 1),
+	GCLDSTATE(gcregBlock8SrcConfigRegAddrs + 7, 1)
 };
 
-static const struct gccmdldstate gcmosrc_origin_ldst[4] = {
+static const struct gccmdldstate gcmosrc_origin_ldst[8] = {
 	GCLDSTATE(gcregSrcOriginRegAddrs, 1),
 	GCLDSTATE(gcregBlock4SrcOriginRegAddrs + 1, 1),
 	GCLDSTATE(gcregBlock4SrcOriginRegAddrs + 2, 1),
 	GCLDSTATE(gcregBlock4SrcOriginRegAddrs + 3, 1),
+	GCLDSTATE(gcregBlock8SrcOriginRegAddrs + 4, 1),
+	GCLDSTATE(gcregBlock8SrcOriginRegAddrs + 5, 1),
+	GCLDSTATE(gcregBlock8SrcOriginRegAddrs + 6, 1),
+	GCLDSTATE(gcregBlock8SrcOriginRegAddrs + 7, 1)
 };
 
-static const struct gccmdldstate gcmosrc_size_ldst[4] = {
+static const struct gccmdldstate gcmosrc_size_ldst[8] = {
 	GCLDSTATE(gcregSrcSizeRegAddrs, 1),
 	GCLDSTATE(gcregBlock4SrcSizeRegAddrs + 1, 1),
 	GCLDSTATE(gcregBlock4SrcSizeRegAddrs + 2, 1),
 	GCLDSTATE(gcregBlock4SrcSizeRegAddrs + 3, 1),
+	GCLDSTATE(gcregBlock8SrcSizeRegAddrs + 4, 1),
+	GCLDSTATE(gcregBlock8SrcSizeRegAddrs + 5, 1),
+	GCLDSTATE(gcregBlock8SrcSizeRegAddrs + 6, 1),
+	GCLDSTATE(gcregBlock8SrcSizeRegAddrs + 7, 1)
 };
 
-static const struct gccmdldstate gcmosrc_rotationheight_ldst[4] = {
+static const struct gccmdldstate gcmosrc_rotationheight_ldst[8] = {
 	GCLDSTATE(gcregSrcRotationHeightRegAddrs, 1),
 	GCLDSTATE(gcregBlock4SrcRotationHeightRegAddrs + 1, 1),
 	GCLDSTATE(gcregBlock4SrcRotationHeightRegAddrs + 2, 1),
 	GCLDSTATE(gcregBlock4SrcRotationHeightRegAddrs + 3, 1),
+	GCLDSTATE(gcregBlock8SrcRotationHeightRegAddrs + 4, 1),
+	GCLDSTATE(gcregBlock8SrcRotationHeightRegAddrs + 5, 1),
+	GCLDSTATE(gcregBlock8SrcRotationHeightRegAddrs + 6, 1),
+	GCLDSTATE(gcregBlock8SrcRotationHeightRegAddrs + 7, 1)
 };
 
-static const struct gccmdldstate gcmosrc_rotationangle_ldst[4] = {
+static const struct gccmdldstate gcmosrc_rotationangle_ldst[8] = {
 	GCLDSTATE(gcregRotAngleRegAddrs, 1),
 	GCLDSTATE(gcregBlock4RotAngleRegAddrs + 1, 1),
 	GCLDSTATE(gcregBlock4RotAngleRegAddrs + 2, 1),
 	GCLDSTATE(gcregBlock4RotAngleRegAddrs + 3, 1),
+	GCLDSTATE(gcregBlock8RotAngleRegAddrs + 4, 1),
+	GCLDSTATE(gcregBlock8RotAngleRegAddrs + 5, 1),
+	GCLDSTATE(gcregBlock8RotAngleRegAddrs + 6, 1),
+	GCLDSTATE(gcregBlock8RotAngleRegAddrs + 7, 1)
 };
 
-static const struct gccmdldstate gcmosrc_rop_ldst[4] = {
+static const struct gccmdldstate gcmosrc_rop_ldst[8] = {
 	GCLDSTATE(gcregRopRegAddrs, 1),
 	GCLDSTATE(gcregBlock4RopRegAddrs + 1, 1),
 	GCLDSTATE(gcregBlock4RopRegAddrs + 2, 1),
 	GCLDSTATE(gcregBlock4RopRegAddrs + 3, 1),
+	GCLDSTATE(gcregBlock8RopRegAddrs + 4, 1),
+	GCLDSTATE(gcregBlock8RopRegAddrs + 5, 1),
+	GCLDSTATE(gcregBlock8RopRegAddrs + 6, 1),
+	GCLDSTATE(gcregBlock8RopRegAddrs + 7, 1)
 };
 
-static const struct gccmdldstate gcmosrc_mult_ldst[4] = {
+static const struct gccmdldstate gcmosrc_mult_ldst[8] = {
 	GCLDSTATE(gcregColorMultiplyModesRegAddrs, 1),
 	GCLDSTATE(gcregBlock4ColorMultiplyModesRegAddrs + 1, 1),
 	GCLDSTATE(gcregBlock4ColorMultiplyModesRegAddrs + 2, 1),
 	GCLDSTATE(gcregBlock4ColorMultiplyModesRegAddrs + 3, 1),
+	GCLDSTATE(gcregBlock8ColorMultiplyModesRegAddrs + 4, 1),
+	GCLDSTATE(gcregBlock8ColorMultiplyModesRegAddrs + 5, 1),
+	GCLDSTATE(gcregBlock8ColorMultiplyModesRegAddrs + 6, 1),
+	GCLDSTATE(gcregBlock8ColorMultiplyModesRegAddrs + 7, 1)
 };
 
 struct gcmosrc {

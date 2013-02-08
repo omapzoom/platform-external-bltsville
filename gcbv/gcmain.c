@@ -487,7 +487,7 @@ void  __attribute__((constructor)) dev_init(void)
 		GCDBG_ENABLEDUMP();
 
 	GCDBG_INIT();
-	GCDBG_REGISTER(gcmain);
+	GCDBG_REGISTER(gcmain, GCZONE_NONE);
 
 	GCENTER(GCZONE_INIT);
 

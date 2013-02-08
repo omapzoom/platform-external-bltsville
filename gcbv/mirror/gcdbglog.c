@@ -296,7 +296,7 @@ static getitemsize g_itemsize[] = {
 
 #if ANDROID
 #define GC_PRINTK(s, fmt, ...) \
-	LOGI(fmt, ##__VA_ARGS__);
+	ALOGI(fmt, ##__VA_ARGS__);
 #else
 #define GC_PRINTK(s, fmt, ...) \
 	printf(fmt, ##__VA_ARGS__);
