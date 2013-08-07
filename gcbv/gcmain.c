@@ -30,6 +30,9 @@
 #include "gcmain.h"
 #include "gcbv.h"
 #include <semaphore.h>
+#if BUILDOS_LINUX
+#include <signal.h>
+#endif
 
 #if ANDROID
 #include <cutils/log.h>

@@ -53,8 +53,9 @@
  */
 
 #include "gcbv.h"
+#if ANDROID
 #include <cutils/log.h>
-
+#endif //ANDROID
 
 #define GCZONE_NONE		0
 #define GCZONE_ALL		(~0U)

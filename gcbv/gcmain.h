@@ -42,6 +42,10 @@
 #include <bltsville.h>
 #include <bvinternal.h>
 #include <bverror.h>
+#if BUILDOS_LINUX
+#include <stdint.h>
+#include <string.h>
+#endif //BUILDOS_LINUX
 
 #define GC_DEV_NAME	"gc2duser"
 

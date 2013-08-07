@@ -318,7 +318,11 @@ static struct threadinfo *get_threadinfo(struct buffout *buffout)
 	pid_t pid;
 
 	/* Get current pid. */
+#if BUILDOS_LINUX
+	pid = getpid();
+#elif ANDROID
 	pid = gettid();
+#endif
 
 	/* Try to locate thread record. */
 	count = buffout->threadcount + 1;
