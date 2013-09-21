@@ -12,11 +12,6 @@ dnl AS_VERSION
 dnl can autoconf find the source ?
 AC_CONFIG_SRCDIR([gcbv/gcmain.c])
 
-AC_CONFIG_HEADERS([config.h])
-
-dnl set the autotools aux directory
-AC_CONFIG_AUX_DIR([config])
-
 dnl AM_MAINTAINER_MODE only provides the option to configure to enable it
 AM_MAINTAINER_MODE
 
@@ -33,6 +28,7 @@ m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])],
 
 dnl find a compiler
 AC_PROG_CC
+AC_PROG_LN_S
 AM_PROG_AS
 LT_INIT
 
