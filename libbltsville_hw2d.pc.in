@@ -6,6 +6,6 @@ includedir=@includedir@
 Name: libbltsville_hw2d
 Description: HW Accelerated GC320 Composition Engine
 Version: @VERSION@
-Requires: 
+Requires:
 Libs: -L${libdir} -lbltsville_hw2d
 Cflags: -I${includedir}/bltsville

@@ -36,6 +36,9 @@ pkgconfig_DATA               = libbltsville_hw2d.pc
 pkgconfigdir                 = $(libdir)/pkgconfig
 
 install-exec-hook:
-	cd $(DESTDIR)$(libdir) && \
-          $(LN_S) libbltsville_hw2d.so.$(VERSION) libbltsville_2d.so
+	cp -f ticpu/lib/linux/libbltsville_ticpu_license.txt $(DESTDIR)$(libdir) && \
+	cp -f ticpu/lib/linux/libbltsville_ticpu.so.2.1.0.0 $(DESTDIR)$(libdir) && \
+    	cd $(DESTDIR)$(libdir) && \
+          $(LN_S) -f libbltsville_hw2d.so.$(VERSION) libbltsville_2d.so && \
+          $(LN_S) -f libbltsville_ticpu.so.2.1.0.0 libbltsville_cpu.so
 
