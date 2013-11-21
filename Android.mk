@@ -14,4 +14,6 @@
 # limitations under the License.
 #
 
+ifeq ($(TARGET_BOARD_PLATFORM), $(filter $(TARGET_BOARD_PLATFORM), omap4 omap5 jacinto6))
 include $(call all-subdir-makefiles)
+endif
