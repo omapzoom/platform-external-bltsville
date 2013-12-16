@@ -35,6 +35,7 @@ struct bvbuffmap;
 
 enum bvauxtype {
 	BVAT_NONE = 0,	/* auxptr not used */
+	BVAT_DMABUF = 1,
 	BVAT_reserved1 = /* reserved */
 		BVATDEF_VENDOR_ALL + 1,
 	BVAT_reserved2 = /* reserved */
@@ -51,6 +52,7 @@ enum bvauxtype {
 struct bvbuffdesc {
 	unsigned int structsize;	/* used to identify struct version */
 	void *virtaddr;			/* virtual ptr to start of buffer */
+	unsigned long dma_buf_handle;   /* dma_buf handle. */
 	unsigned long length;		/* length of the buffer in bytes */
 	struct bvbuffmap *map;		/* resource(s) associated w/buffer */
 	enum bvauxtype auxtype;		/* type of auxptr */

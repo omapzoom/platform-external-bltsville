@@ -122,8 +122,14 @@ enum bverror do_map(struct bvbuffdesc *bvbuffdesc,
 		 * extended by the value of the offset. */
 		gcimap.gcerror = GCERR_NONE;
 		gcimap.handle = 0;
+                gcimap.dmabuf_handle = 0;
 
-		if (bvbuffdesc->auxtype == BVAT_PHYSDESC) {
+		if (bvbuffdesc->auxtype == BVAT_DMABUF) {
+			gcimap.dmabuf_handle = bvbuffdesc->dma_buf_handle;
+			gcimap.pagesize = 0;
+			gcimap.pagearray = NULL;
+			gcimap.size = bvbuffdesc->length;
+                } else if (bvbuffdesc->auxtype == BVAT_PHYSDESC) {
 			bvphysdesc = (struct bvphysdesc *) bvbuffdesc->auxptr;
 
 			if (bvphysdesc->structsize <
@@ -174,6 +180,10 @@ enum bverror do_map(struct bvbuffdesc *bvbuffdesc,
 		/* Set map handle. */
 		bvbuffmapinfo = (struct bvbuffmapinfo *) bvbuffmap->handle;
 		bvbuffmapinfo->handle = gcimap.handle;
+		if (bvbuffdesc->auxtype == BVAT_DMABUF)
+                    bvbuffmapinfo->dmabuf_handle = bvbuffdesc->dma_buf_handle;
+                else
+                    bvbuffmapinfo->dmabuf_handle = 0;
 
 		/* Initialize reference counters. */
 		if (batch == NULL) {

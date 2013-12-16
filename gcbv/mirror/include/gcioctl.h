@@ -205,6 +205,9 @@ struct gcimap {
 
 	/* Size of the buffer to be mappped. */
 	unsigned int size;
+
+        /* dma buf handle to be imported. */
+        unsigned long dmabuf_handle;
 };
 
 

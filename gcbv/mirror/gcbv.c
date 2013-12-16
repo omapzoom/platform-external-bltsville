@@ -1534,6 +1534,7 @@ enum bverror bv_unmap(struct bvbuffdesc *bvbuffdesc)
 	/* Unmap the buffer. */
 	memset(&gcimap, 0, sizeof(gcimap));
 	gcimap.handle = bvbuffmapinfo->handle;
+        gcimap.dmabuf_handle = bvbuffmapinfo->dmabuf_handle;
 	gc_unmap_wrapper(&gcimap);
 	if (gcimap.gcerror != GCERR_NONE) {
 		BVSETERROR(BVERR_OOM, "unable to free gccore memory");

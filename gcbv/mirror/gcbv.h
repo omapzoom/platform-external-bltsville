@@ -226,6 +226,9 @@ struct bvbuffmapinfo {
 	/* Mapped handle for the buffer. */
 	unsigned long handle;
 
+	/* DMA buf handle. */
+	unsigned long dmabuf_handle;
+
 	/* Number of times the client explicitly mapped this buffer. */
 	int usermap;
 
